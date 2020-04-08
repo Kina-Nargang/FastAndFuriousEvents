@@ -28,10 +28,22 @@ namespace EventCatalogApi
         {
             services.AddControllers();
 
-            // add local dababase
-            // pass options back to EventContext class
+            // set up for docker compose file
+            var server = Configuration["DatabaseServer"];
+            var database = Configuration["DatabaseName"];
+            var user = Configuration["DatabaseUser"];
+            var password = Configuration["DatabasePassword"];
+            var connectionString =
+                $"Server={server};Database={database};User Id={user};Password={password}";
+            // run on docker
             services.AddDbContext<EventContext>(options =>
-                options.UseSqlServer(Configuration["ConnectionString"]));
+                            options.UseSqlServer(connectionString));
+
+
+            //// add local dababase
+            //// pass options back to EventContext class, run on IIS
+            //services.AddDbContext<EventContext>(options =>
+            //    options.UseSqlServer(Configuration["ConnectionString"]));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
